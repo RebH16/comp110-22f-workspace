@@ -41,10 +41,10 @@ if character_count == 0:
 if character_count == 1:
     print("1 instance of " + str(single_character) + " found in " + str(full_word))
 if character_count == 2:
-     print("2 instances of " + str(single_character) + " found in " + str(full_word))
+    print("2 instances of " + str(single_character) + " found in " + str(full_word))
 if character_count == 3:
-     print("3 instances of " + str(single_character) + " found in " + str(full_word))
+    print("3 instances of " + str(single_character) + " found in " + str(full_word))
 if character_count == 4:
-     print("4 instances of " + str(single_character) + " found in " + str(full_word))
+    print("4 instances of " + str(single_character) + " found in " + str(full_word))
 if character_count == 5:
-     print("5 instances of " + str(single_character) + " found in " + str(full_word))
+    print("5 instances of " + str(single_character) + " found in " + str(full_word))
