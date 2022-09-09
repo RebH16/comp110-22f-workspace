@@ -23,23 +23,16 @@ while len(user_guess) != secret_len:
     user_guess = input(f"That was not {secret_len} letters! Try again: ")
 
 """Emoji set-up"""
-# while i < secret_len:
-#    if user_guess[i] == secret_word[i]:
-#        emoji += GREEN_BOX
-#    while guessed_character_existance is not True and alternate_indices < secret_len:
-#        if secret_word[alternate_indices] == user_guess[i]:
-#            guessed_character_existance = True
-#            emoji += YELLOW_BOX
-#        else:
-#            alternate_indices += 1
-#    i += 1
-#    if guessed_character_existance == False:
-#        emoji += WHITE_BOX
-
 while i < secret_len:
     if user_guess[i] == secret_word[i]:
         emoji += GREEN_BOX
-    else:
+    while guessed_character_existance is not True and alternate_indices < secret_len and user_guess[i] != secret_word[i]:
+        if secret_word[alternate_indices] == user_guess[i]:
+            guessed_character_existance = True
+            emoji += YELLOW_BOX
+        else:
+            alternate_indices += 1
+    if user_guess[i] != secret_word[i] == False and guessed_character_existance == False:
         emoji += WHITE_BOX
     i += 1
 
