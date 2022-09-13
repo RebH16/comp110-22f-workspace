@@ -10,3 +10,5 @@ age = age + 1
 print(age)
 
 age = 18
+
+print(age(1))
