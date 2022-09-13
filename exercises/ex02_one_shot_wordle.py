@@ -1,12 +1,7 @@
 """This code will run one-shot wordl as an intermediary lesson before making full wordle!"""
 
 __author__ = "730568515"
-# while index < secret_len:
-#    if user_guess[index] == secret_word[index]:
-#        emoji += GREEN_BOX
-#    else:
-#        emoji += WHITE_BOX
-#    index += 1
+
 """Variable Definitions"""
 secret_word: str = "python"
 secret_len: int = len(secret_word)
