@@ -12,5 +12,4 @@ def read_csv_rows(filename: str) -> list[dict[str, str]]:
     csv_reader = DictReader(file_handle)
     # Close the file
     file_handle.close()
-
     return result
