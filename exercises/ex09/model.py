@@ -32,17 +32,14 @@ class Cell:
     direction: Point
     sickness: int = constants.VULNERABLE
 
-    def __init__(self, location: Point, direction: Point):
+    def __init__(self, location: Point, direction: Point, sickness: int):
         """Construct a cell with its location and direction."""
         self.location = location
         self.direction = direction
+        self.sickness = sickness
 
     def tick(self) -> None:
         self.location = self.location.add(self.direction)
-        
-    def color(self) -> str:
-        """Return the color representation of a cell."""
-        return "black"
 
     def contract_diseas(self) -> None:
         self.sickness = constants.INFECTED
@@ -77,16 +74,21 @@ class Model:
         self.population = []
         if infected_cells >= cells or infected_cells <= 0:
             ValueError("Some number of cells must begin infected.")
-        for _ in range(cells):
+        i: int = 0
+        while i < cells - infected_cells:
             start_location: Point = self.random_location()
             start_direction: Point = self.random_direction(speed)
-            cell: Cell = Cell(start_location, start_direction, 0)
+            start_status_vulnerable: int = constants.VULNERABLE
+            cell: Cell = Cell(start_location, start_direction, start_status_vulnerable)
             self.population.append(cell)
-        for _ in range(infected_cells):
+            i += 1
+        while i < infected_cells:
             start_location: Point = self.random_location()
             start_direction: Point = self.random_direction(speed)
-            sick_cell: Cell = Cell(start_location, start_direction, 1)
-            self.population.append(sick_cell)
+            start_status_infected: int = constants.INFECTED
+            cell: Cell = Cell(start_location, start_direction, start_status_infected)
+            self.population.append(cell)
+            i += 1
     
     def tick(self) -> None:
         """Update the state of the simulation by one time step."""
@@ -122,8 +124,6 @@ class Model:
         if cell.location.y < constants.MIN_Y:
             cell.location.y = constants.MIN_Y
             cell.direction.y *= -1.0
-        
-
 
     def is_complete(self) -> bool:
         """Method to indicate when the simulation is complete."""
