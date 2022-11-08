@@ -38,8 +38,10 @@ def columnar(row_table: list[dict[str, str]]) -> dict[str, list[str]]:
 def head(table: dict[str, list[str]], N: int) -> dict[str, list[str]]:
     """Reads the top of a table."""
     result: dict[str, list[str]] = {}
+    if N > len(table):
+        N = len(table)
     for column in table:
-        first_values: list = []
+        first_values: list[str] = []
         i: int = 0
         for i in range(N):
             first_values.append(table[column][i])
@@ -62,9 +64,9 @@ def concat(table_one: dict[str, list[str]], table_two: dict[str, list[str]]) -> 
         result[column] = table_one[column]
     for column in table_two:
         if column in table_one:
-            table_one[column] += table_two[column]
+            result[column] = table_one[column] + table_two[column]
         else:
-            table_one[column] = table_two[column]
+            result[column] = table_two[column]
     return result
         
 
