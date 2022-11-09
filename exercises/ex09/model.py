@@ -3,7 +3,7 @@
 from __future__ import annotations
 from random import random
 from exercises.ex09 import constants
-from math import sin, cos, pi
+from math import sin, cos, pi, sqrt
 
 
 __author__ = "730568515"
@@ -24,6 +24,12 @@ class Point:
         x: float = self.x + other.x
         y: float = self.y + other.y
         return Point(x, y)
+    
+    def distance(self, other: Point) -> int:
+        distance: int = sqrt((self.x - other.x)** 2 + (self.y - other.y)**2)
+        return distance
+    
+        
 
 
 class Cell:
@@ -41,7 +47,7 @@ class Cell:
     def tick(self) -> None:
         self.location = self.location.add(self.direction)
 
-    def contract_diseas(self) -> None:
+    def contract_disease(self) -> None:
         self.sickness = constants.INFECTED
     
     def is_vulnerable(self) -> bool:
@@ -57,11 +63,16 @@ class Cell:
             return False
         
     def color(self) -> str:
-        if self.is_vulnerable == True:
+        if self.is_vulnerable():
             return "gray"
         else:
             return "red"
     
+    def contact_with(self, other: Cell) -> None:
+        if self.is_infected() == True and other.is_vulnerable() == True:
+            other.contract_disease()
+        elif other.is_infected() == True and self.is_vulnerable() == True:
+            self.contract_disease()
 
 class Model:
     """The state of the simulation."""
@@ -74,21 +85,13 @@ class Model:
         self.population = []
         if infected_cells >= cells or infected_cells <= 0:
             ValueError("Some number of cells must begin infected.")
-        i: int = 0
-        while i < cells - infected_cells:
+        for i in range(cells):
             start_location: Point = self.random_location()
             start_direction: Point = self.random_direction(speed)
-            start_status_vulnerable: int = constants.VULNERABLE
-            cell: Cell = Cell(start_location, start_direction, start_status_vulnerable)
+            cell: Cell = Cell(start_location, start_direction, constants.VULNERABLE)
+            if i < infected_cells:
+                cell.contract_disease()
             self.population.append(cell)
-            i += 1
-        while i < infected_cells:
-            start_location: Point = self.random_location()
-            start_direction: Point = self.random_direction(speed)
-            start_status_infected: int = constants.INFECTED
-            cell: Cell = Cell(start_location, start_direction, start_status_infected)
-            self.population.append(cell)
-            i += 1
     
     def tick(self) -> None:
         """Update the state of the simulation by one time step."""
@@ -128,3 +131,6 @@ class Model:
     def is_complete(self) -> bool:
         """Method to indicate when the simulation is complete."""
         return False
+    
+    def check_contacts(self) -> None:
+        
