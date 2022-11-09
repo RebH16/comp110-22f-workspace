@@ -26,7 +26,7 @@ class Point:
         return Point(x, y)
     
     def distance(self, other: Point) -> int:
-        distance: int = sqrt((self.x - other.x)** 2 + (self.y - other.y)**2)
+        distance: int = sqrt((self.x - other.x)**2 + (self.y - other.y)**2)
         return distance
     
         
@@ -69,9 +69,9 @@ class Cell:
             return "red"
     
     def contact_with(self, other: Cell) -> None:
-        if self.is_infected() == True and other.is_vulnerable() == True:
+        if self.is_infected() and other.is_vulnerable():
             other.contract_disease()
-        elif other.is_infected() == True and self.is_vulnerable() == True:
+        elif other.is_infected() and self.is_vulnerable():
             self.contract_disease()
 
 class Model:
@@ -99,6 +99,7 @@ class Model:
         for cell in self.population:
             cell.tick()
             self.enforce_bounds(cell)
+        self.check_contacts()
 
     def random_location(self) -> Point:
         """Generate a random location."""
@@ -133,4 +134,11 @@ class Model:
         return False
     
     def check_contacts(self) -> None:
-        
+        i: int = 0
+        while i < len(self.population):
+            j: int = i + 1
+            while j < len(self.population):
+                if self.population[i].location.distance(self.population[j].location) < constants.CELL_RADIUS:
+                    self.population[i].contact_with(self.population[j])
+                j += 1
+            i += 1
