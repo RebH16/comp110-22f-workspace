@@ -26,10 +26,11 @@ class Point:
         return Point(x, y)
     
     def distance(self, other: Point) -> int:
-        """Calculates the distance between two points."""
         distance: int = sqrt((self.x - other.x)**2 + (self.y - other.y)**2)
         return distance
     
+        
+
 
 class Cell:
     """An individual subject in the simulation."""
@@ -37,13 +38,13 @@ class Cell:
     direction: Point
     sickness: int = constants.VULNERABLE
 
-    def __init__(self, location: Point, direction: Point):
+    def __init__(self, location: Point, direction: Point, sickness: int):
         """Construct a cell with its location and direction."""
         self.location = location
         self.direction = direction
+        self.sickness = sickness
 
     def tick(self) -> None:
-        """Increments time."""
         self.location = self.location.add(self.direction)
         if self.is_infected():
             self.sickness += 1
@@ -51,25 +52,21 @@ class Cell:
                 self.immunize()
 
     def contract_disease(self) -> None:
-        """Changes the sickness status to infected."""
         self.sickness = constants.INFECTED
     
     def is_vulnerable(self) -> bool:
-        """Sets a cells sickness status to vulnerable."""
         if self.sickness == constants.VULNERABLE:
             return True
         else:
             return False
         
     def is_infected(self) -> bool:
-        """Sets a cells sickness status to infected."""
         if self.sickness >= constants.INFECTED:
             return True
         else:
             return False
         
     def color(self) -> str:
-        """Tells the model what color to make the cells based on sickness."""
         if self.is_vulnerable():
             return "gray"
         elif self.is_immune():
@@ -78,24 +75,20 @@ class Cell:
             return "red"
     
     def contact_with(self, other: Cell) -> None:
-        """Detects if two cells have made contact."""
         if self.is_infected() and other.is_vulnerable():
             other.contract_disease()
         elif other.is_infected() and self.is_vulnerable():
             self.contract_disease()
 
     def immunize(self) -> None:
-        """Sets a cells sickness status to immune."""
         self.sickness = constants.IMMUNE
     
     def is_immune(self) -> bool:
-        """Checks if a cell is immune."""
         if self.sickness == constants.IMMUNE:
             return True
         else:
             return False
 
-        
 class Model:
     """The state of the simulation."""
 
@@ -106,13 +99,13 @@ class Model:
         """Initialize the cells with random locations and directions."""
         self.population = []
         if infected_cells >= cells or infected_cells <= 0:
-            raise ValueError("Some number of cells must begin infected.")
-        if immune_cells >= cells or immune_cells < 0:
-            raise ValueError("Some number of cells must begin immune.")
+            ValueError("Some number of cells must begin infected.")
+        if immune_cells >= cells or immune_cells <= 0:
+            ValueError("Some number of cells must begin immune.")
         for i in range(cells):
             start_location: Point = self.random_location()
             start_direction: Point = self.random_direction(speed)
-            cell: Cell = Cell(start_location, start_direction)
+            cell: Cell = Cell(start_location, start_direction, constants.VULNERABLE)
             if i < infected_cells:
                 cell.contract_disease()
             if i < immune_cells:
@@ -165,7 +158,6 @@ class Model:
         return True
     
     def check_contacts(self) -> None:
-        """Checks if two cells have made contact."""
         i: int = 0
         while i < len(self.population):
             j: int = i + 1
