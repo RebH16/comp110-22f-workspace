@@ -26,6 +26,7 @@ class StrArray:
             # Loop through each index of self's items
             # Concatenate the corresponding value of rhs's items at same index
             # Append the resulting string to result's items list
+            assert len(self.items) == len(rhs.items)
             for i in range(len(self.items)):
                 result.items.append(self.items[i] + rhs.items[i])
         return result
